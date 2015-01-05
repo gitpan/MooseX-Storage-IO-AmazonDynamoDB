@@ -2,7 +2,7 @@ package MooseX::Storage::IO::AmazonDynamoDB;
 
 use strict;
 use 5.014;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Amazon::DynamoDB;
 use AWS::CLI::Config;
@@ -236,7 +236,7 @@ __END__
 
 =head1 NAME
 
-MooseX::Storage::IO::AmazonDynamoDB - Save Moose objects to AWS's DynamoDB, via MooseX::Storage.
+MooseX::Storage::IO::AmazonDynamoDB - Store and retrieve Moose objects to AWS's DynamoDB, via MooseX::Storage.
 
 =head1 SYNOPSIS
 
