@@ -4,7 +4,6 @@ author:
   - 'Steve Caldwell <scaldwell@gmail.com>'
 build_requires:
   Clone: '0'
-  Dist::Milla: '0'
   Future: '0'
   Kavorka: '0'
   MooseX::ClassAttribute: '0'
@@ -44,4 +43,4 @@ resources:
   bugtracker: https://github.com/stevecaldwell77/MooseX-Storage-IO-AmazonDynamoDB/issues
   homepage: https://github.com/stevecaldwell77/MooseX-Storage-IO-AmazonDynamoDB
   repository: https://github.com/stevecaldwell77/MooseX-Storage-IO-AmazonDynamoDB.git
-version: '0.02'
+version: '0.03'
