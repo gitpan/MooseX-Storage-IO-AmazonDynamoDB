@@ -2,7 +2,7 @@ package MooseX::Storage::IO::AmazonDynamoDB;
 
 use strict;
 use 5.014;
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Amazon::DynamoDB;
 use AWS::CLI::Config;
@@ -160,7 +160,8 @@ role {
             TableName => $table_name,
             Key       => {
                 $p->key_attr => $item_key,
-            }
+            },
+            ConsistentRead => 'true',
         );
 
         return $future->get();
@@ -514,7 +515,11 @@ Having a true value for dynamodb_local is equivalent to:
 
 =head1 NOTES
 
-=head2 format level (freeze/thaw)
+=head2 Strongly consistent reads
+
+When executing load(), this module will always use strongly consistent reads when calling DynamoDB's GetItem operation.  Read about DyanmoDB's consistency model in their L<FAQ|http://aws.amazon.com/dynamodb/faqs/> to learn more.
+
+=head2 Format level (freeze/thaw)
 
 Note that this role does not need you to implement a 'format' level for your object, i.e freeze/thaw.  You can add one if you want it for other purposes.
 
