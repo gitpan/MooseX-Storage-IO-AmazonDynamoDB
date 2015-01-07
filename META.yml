@@ -30,6 +30,7 @@ no_index:
 requires:
   AWS::CLI::Config: '0'
   Amazon::DynamoDB: '0'
+  Data::Dumper: '0'
   IO::Socket::SSL: '0'
   JSON::MaybeXS: '0'
   Module::Runtime: '0'
@@ -44,4 +45,4 @@ resources:
   bugtracker: https://github.com/stevecaldwell77/MooseX-Storage-IO-AmazonDynamoDB/issues
   homepage: https://github.com/stevecaldwell77/MooseX-Storage-IO-AmazonDynamoDB
   repository: https://github.com/stevecaldwell77/MooseX-Storage-IO-AmazonDynamoDB.git
-version: '0.05'
+version: '0.06'

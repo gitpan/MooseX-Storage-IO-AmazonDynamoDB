@@ -2,10 +2,11 @@ package MooseX::Storage::IO::AmazonDynamoDB;
 
 use strict;
 use 5.014;
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use Amazon::DynamoDB;
 use AWS::CLI::Config;
+use Data::Dumper;
 use JSON::MaybeXS;
 use Module::Runtime qw(use_module);
 use MooseX::Role::Parameterized;
@@ -138,7 +139,7 @@ role {
 
             return undef unless $packed;
 
-            # Refs are stored as JSON
+            # Deserialize JSON values
             foreach my $key (keys %$packed) {
                 my $value = $packed->{$key};
                 if ($value && $value =~ /^\$json\$v(\d+)\$:(.+)$/) {
@@ -152,11 +153,13 @@ role {
                 }
             }
 
-            return $class->unpack({
-                %$packed,
-                %$inject,
-                $client_attr => $client,
-            });
+            return $class->unpack(
+                $packed,
+                inject => {
+                    %$inject,
+                    $client_attr => $client,
+                }
+            );
         };
 
         my $future = $client->get_item(
@@ -181,7 +184,12 @@ role {
         my $packed = $self->pack;
         foreach my $key (keys %$packed) {
             my $value = $packed->{$key};
-            if ((ref $value) || (! defined $value)) {
+            my $store_as_json = (
+                (ref $value)
+                || (! defined $value)
+                || (! length($value))
+            );
+            if ($store_as_json) {
                 state $coder = JSON::MaybeXS->new(
                     utf8         => 1,
                     canonical    => 1,
@@ -197,13 +205,18 @@ role {
         )->on_fail(sub {
             my ($e) = @_;
             my $message = 'An error occurred while executing put_item: ';
-            if (ref $e && ref $e eq 'HASH' && $e->{Message}) {
-                $message .= $e->{Message};
-                if ($e->{type}) {
-                    $message .= ' (type '.$e->{type}.')';
+            if (ref $e && ref $e eq 'HASH') {
+                my $submessage = $e->{Message} || $e->{message};
+                if ($submessage) {
+                    $message .= $submessage;
+                    if ($e->{type}) {
+                        $message .= ' (type '.$e->{type}.')';
+                    }
+                } else {
+                    $message .= 'Unknown error: '.Dumper($e);
                 }
             } else {
-                $message = "Unknown error: $e";
+                $message .= "Unknown error: $e";
             }
             Throwable::Error->throw($message);
         });
@@ -537,9 +550,9 @@ When communicating with the AWS service, the Amazon::DynamoDB code is not handli
 
 I'm hoping to get this fixed.
 
-=head2 How undefs are stored
+=head2 How undefs and empty strings are stored
 
-There's a similar problem with how Amazon::DynamoDB stores undef values:
+There's a similar problem with how Amazon::DynamoDB stores undef values and empty strings:
 
 L<https://github.com/rustyconover/Amazon-DynamoDB/issues/4>
 
