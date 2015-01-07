@@ -9,6 +9,7 @@ build_requires:
   MooseX::ClassAttribute: '0'
   Test::Most: '0'
   Test::Pod: '0'
+  Test::Warnings: '0'
 configure_requires:
   Module::Build::Tiny: '0.039'
 dynamic_config: 0
@@ -43,4 +44,4 @@ resources:
   bugtracker: https://github.com/stevecaldwell77/MooseX-Storage-IO-AmazonDynamoDB/issues
   homepage: https://github.com/stevecaldwell77/MooseX-Storage-IO-AmazonDynamoDB
   repository: https://github.com/stevecaldwell77/MooseX-Storage-IO-AmazonDynamoDB.git
-version: '0.04'
+version: '0.05'
